@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #293eb8;
+            color: white;
+            padding: 20px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar .header {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .nav-bar ul {
+            list-style: none;
+            padding: 0;
+            flex-grow: 1;
+        }
+        .nav-bar ul li {
+            margin: 10px 0;
+        }
+        .nav-bar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            display: block;
+            padding: 10px;
+            transition: background 0.3s;
+        }
+        .nav-bar ul li a:hover {
+            background: #1a2e8e;
+        }
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+            width: 100%;
+        }
+        .timings-list, .books-list {
+            margin-top: 20px;
+        }
+        .timing-item, .book-item {
+            padding: 10px;
+            background-color: #f4f4f4;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .timing-item span, .book-item span {
+            font-weight: bold;
+        }
+        #name,#isbn,#author,#topic{
+            padding-right:300px;
+            padding-bottom:30px;
+        }
+        .submit{
+            background-color: #1a2e8e;
+            color:white;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="header">Student Page</div>
+        <div class="nav-bar">
+            <ul>
+                <li><a onclick="loadPage('view_data')">View Data</a></li>
+                <li><a onclick="loadPage('view_timings')">View Timings</a></li>
+                <li><a onclick="loadPage('search_books')">Search Books</a></li>
+                <li><a onclick="loadPage('contact_support')">Contact Support</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="content">
+        <div id="student-content">
+            <h2>Welcome to the Student Dashboard</h2>
+            <p>Select an option from the navigation.</p>
+        </div>
+    </div>
+
+    <script>
+        // Function to load page content based on selection
+        function loadPage(page) {
+            const content = document.getElementById("student-content");
+            let htmlContent = "";
+
+            switch (page) {
+                case "view_data":
+                    htmlContent = `
+                        <h2>View Data</h2>
+                        <p>Here, you can view the uploaded data that is available for you.</p>
+                        <ul id="dataList">
+                            <li>Loading...</li>
+                        </ul>
+                    `;
+                    fetchData();
+                    break;
+                case "view_timings":
+                    htmlContent = `
+                        <h2>View Timings</h2>
+                        <div id="timings-list" class="timings-list">
+                            <p>Loading timings...</p>
+                        </div>
+                    `;
+                    fetchTimings();
+                    break;
+                case "search_books":
+                    htmlContent = `
+                        <h2>Search Academic Books</h2>
+                        <form id="searchForm">
+                            <label for="name">Book Name:</label>
+                            <input type="text" id="name" name="name"><br><br>
+
+                            <label for="author">Author:</label>
+                            <input type="text" id="author" name="author"><br><br>
+
+                            <label for="isbn">ISBN:</label>
+                            <input type="text" id="isbn" name="isbn"><br><br>
+
+                            <label for="subject">Subject:</label>
+                            <input type="text" id="subject" name="subject"><br><br>
+
+                            <button type="submit" class="submit">Search</button>
+                        </form>
+
+                        <h3>Search Results</h3>
+                        <div id="results"></div>
+                    `;
+                    break;
+                case "contact_support":
+                    htmlContent = `<h2>Contact Support</h2><p>If you need help, contact support.</p>`;
+                    break;
+                default:
+                    htmlContent = `<h2>Welcome</h2><p>Select an option from the navigation.</p>`;
+            }
+
+            content.innerHTML = htmlContent;
+
+            if (page === 'search_books') {
+                document.getElementById('searchForm').addEventListener('submit', async function(event) {
+                    event.preventDefault();
+
+                    const name = document.getElementById('name').value;
+                    const author = document.getElementById('author').value;
+                    const isbn = document.getElementById('isbn').value;
+                    const subject = document.getElementById('subject').value;
+
+                    try {
+                        const response = await fetch(`http://localhost:5000/search?name=${name}&author=${author}&isbn=${isbn}&subject=${subject}`);
+                        const data = await response.json();
+
+                        const resultsDiv = document.getElementById('results');
+                        resultsDiv.innerHTML = '';
+                        if (data.length === 0) {
+                            resultsDiv.innerHTML = 'No books found.';
+                        } else {
+                            data.forEach(book => {
+                                const bookDiv = document.createElement('div');
+                                bookDiv.className = 'book-item';
+                                bookDiv.innerHTML = `
+                                    <strong>Title:</strong> ${book.name} <br>
+                                    <strong>Author:</strong> ${book.author} <br>
+                                    <strong>Publisher:</strong> ${book.publisher} <br>
+                                    <strong>Edition:</strong> ${book.edition} <br>
+                                    <strong>ISBN:</strong> ${book.isbn} <br>
+                                    <strong>Subject:</strong> ${book.subject} <br>
+                                    <strong>Availability:</strong> <span id="availability-${book.id}">${book.availability}</span> copies available <br>
+                                    <button onclick="reserveBook(${book.id}, ${book.availability})">Reserve</button>
+                                    <br><br>
+                                `;
+                                resultsDiv.appendChild(bookDiv);
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Error fetching data:', error);
+                        alert('Error searching for books.');
+                    }
+                });
+            }
+        }
+
+        async function reserveBook(bookId, currentAvailability) {
+            if (currentAvailability <= 0) {
+                alert('Sorry, no copies are available to reserve.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:4000/reserve/${bookId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById(`availability-${bookId}`).innerText = currentAvailability - 1;
+                } else {
+                    alert('Error reserving the book.');
+                }
+            } catch (error) {
+                console.error('Error reserving book:', error);
+                alert('Error reserving the book.');
+            }
+        }
+        function fetchData() {
+    fetch("http://localhost:4000/data")
+        .then(response => response.json())
+        .then(data => {
+            const dataList = document.getElementById("dataList");
+            dataList.innerHTML = ""; // Clear previous entries
+            if (data.length === 0) {
+                dataList.innerHTML = "<li>No notices available</li>";
+            } else {
+                data.forEach(item => {
+                    const li = document.createElement("li");
+                    li.textContent = item;
+                    dataList.appendChild(li);
+                });
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching data:", error);
+            document.getElementById("dataList").innerHTML = "<li>Error loading notices</li>";
+        });
+}
+
+        // Fetch timings from the server
+        function fetchTimings() {
+            fetch('http://localhost:4000/timings')
+                .then(response => response.json())
+                .then(timings => {
+                    const timingsListDiv = document.getElementById('timings-list');
+                    timingsListDiv.innerHTML = '';
+
+                    if (timings.length === 0) {
+                        timingsListDiv.innerHTML = '<p>No timings available.</p>';
+                    } else {
+                        timings.forEach(timing => {
+                            const timingItem = document.createElement('div');
+                            timingItem.className = 'timing-item';
+                            timingItem.innerHTML = `<span>Timing:</span> ${timing}`;
+                            timingsListDiv.appendChild(timingItem);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching timings:', error);
+                    const timingsListDiv = document.getElementById('timings-list');
+                    timingsListDiv.innerHTML = '<p>Error loading timings.</p>';
+                });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+HACKATHON
+
+1. e resources - journals, books separate
+2. gallery
+3. events - uploaded by librarian
+4. FAQs - answered by lib
+5. how to borrow and return 
+6. rules and regulations
+7. timings- daily basis- by librarian 
+8. employee lists and contacts(cabin no)
+9. where are the books- location
+10. flipbook and pdf, university cards
+11.achievements
+
+
+header:
+home
+about us
+resources
+facilities and spaces
+others- events, gallery
+
+
+footer:
+FAQs
+contact us
+
+
+extras:
+email sent if book not returned
+
+
+
+to learn:
+
+how to do login
+nodejs and sql connection
+
+multipage in react
+
+
+

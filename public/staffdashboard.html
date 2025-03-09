@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #293eb8;
+            color: white;
+            padding: 20px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar .header {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .nav-bar ul {
+            list-style: none;
+            padding: 0;
+            flex-grow: 1;
+        }
+        .nav-bar ul li {
+            margin: 10px 0;
+        }
+        .nav-bar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            display: block;
+            padding: 10px;
+            transition: background 0.3s;
+        }
+        .nav-bar ul li a:hover {
+            background: #1a2e8e;
+        }
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+            width: 100%;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input, button {
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        button {
+            background: #293eb8;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1a2e8e;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="header">Staff Page</div>
+        <div class="nav-bar">
+            <ul>
+                <li><a onclick="loadPage('upload_data')">Upload Data</a></li>
+                <li><a onclick="loadPage('upload_timings')">Upload Timings</a></li>
+                <li><a onclick="loadPage('answer_faqs')">Answer FAQs</a></li>
+                <li><a onclick="loadPage('employee_details')">Employee Details</a></li>
+                <li><a onclick="loadPage('upload_events')">Upload Events</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="content">
+        <div id="staff-content">
+            <h2>Welcome to the Staff Dashboard</h2>
+            <p>Select an option from the navigation.</p>
+        </div>
+    </div>
+
+    <script>
+        function loadPage(page) {
+            const content = document.getElementById("staff-content");
+            let htmlContent = "";
+
+            switch (page) {
+                case "upload_data":
+                    htmlContent = `
+                        <h2>Upload Data</h2>
+                        <form id="uploadForm">
+                            <label for="data">Enter data to upload:</label>
+                            <input type="text" id="data" name="data" required />
+                            <button type="submit">Upload Data</button>
+                        </form>
+                    `;
+                    break;
+                case "upload_timings":
+                    htmlContent = `
+                        <h2>Upload Timings</h2>
+                        <form id="timingsForm">
+                            <label for="timings">Enter timings (e.g., 9AM - 5PM):</label>
+                            <input type="text" id="timings" name="timings" required />
+                            <button type="submit">Upload Timings</button>
+                        </form>
+                    `;
+                    break;
+                case "answer_faqs":
+                    htmlContent = `<h2>Answer FAQs</h2><p>Provide answers to frequently asked questions from students.</p>`;
+                    break;
+                case "employee_details":
+                    htmlContent = `<h2>Employee Details</h2><p>View and manage library employee details.</p>`;
+                    break;
+                case "upload_events":
+                    htmlContent = `<h2>Upload Events</h2><p>Post upcoming library events and notices.</p>`;
+                    break;
+                default:
+                    htmlContent = `<h2>Welcome</h2><p>Select an option from the navigation.</p>`;
+            }
+
+            content.innerHTML = htmlContent;
+
+            if (page === "upload_data") {
+                document.getElementById('uploadForm').addEventListener('submit', function (event) {
+                    event.preventDefault(); 
+                    const data = document.getElementById('data').value;
+
+                    fetch('http://localhost:4000/upload', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ data })
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        console.log('Data uploaded:', result);
+                        alert('Data uploaded successfully!');
+                    })
+                    .catch(error => {
+                        console.error('Error uploading data:', error);
+                        alert('Error uploading data');
+                    });
+                });
+            }
+
+            if (page === "upload_timings") {
+                document.getElementById('timingsForm').addEventListener('submit', function (event) {
+                    event.preventDefault(); 
+                    const timings = document.getElementById('timings').value;
+
+                    fetch('http://localhost:4000/upload_timings', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ timings })
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        console.log('Timings uploaded:', result);
+                        alert('Timings uploaded successfully!');
+                    })
+                    .catch(error => {
+                        console.error('Error uploading timings:', error);
+                        alert('Error uploading timings');
+                    });
+                });
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Selection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        .header, .footer {
+            background-color: #293eb8;
+            color: white;
+            padding: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            position: fixed;
+            left: 0;
+            z-index: 1000;
+        }
+        .header {
+            top: 0;
+        }
+        .footer {
+            bottom: 0;
+            font-size: 16px;
+        }
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding-top: 80px; /* Space for header */
+            padding-bottom: 50px; /* Space for footer */
+        }
+        .login-container {
+            display: flex;
+            gap: 40px;
+        }
+        .login-option {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s;
+        }
+        .login-option:hover {
+            transform: scale(1.1);
+            background-color: #e0e0e0;
+        }
+        .login-option h2 {
+            margin: 10px 0;
+        }
+        .login-option a {
+            text-decoration: none;
+            color: #293eb8;
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">VIT (Chennai Campus)</div>
+
+    <div class="container">
+        <h1>WELCOME TO VISDOM</h1>
+        <div class="login-container">
+            <div class="login-option" onclick="window.location.href='student.html'">
+                <h2>Student</h2>
+                <a href="student.html"></a>
+            </div>
+            <div class="login-option" onclick="window.location.href='staff.html'">
+                <h2>Staff</h2>
+                <a href="staff.html"></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">© 2025 VIT Chennai. All rights reserved.</div>
+
+</body>
+</html>

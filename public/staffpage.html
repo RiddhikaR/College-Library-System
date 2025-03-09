@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Academic Books</title>
+</head>
+<body>
+    <h2>Search Academic Books</h2>
+    <form id="searchForm">
+        <label for="name">Book Name:</label>
+        <input type="text" id="name" name="name"><br><br>
+
+        <label for="author">Author:</label>
+        <input type="text" id="author" name="author"><br><br>
+
+        <label for="isbn">ISBN:</label>
+        <input type="text" id="isbn" name="isbn"><br><br>
+
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject" name="subject"><br><br>
+
+        <button type="submit">Search</button>
+    </form>
+
+    <h3>Search Results</h3>
+    <div id="results"></div>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            // Collect form data and encode them properly
+            const name = encodeURIComponent(document.getElementById('name').value.trim());
+            const author = encodeURIComponent(document.getElementById('author').value.trim());
+            const isbn = encodeURIComponent(document.getElementById('isbn').value.trim());
+            const subject = encodeURIComponent(document.getElementById('subject').value.trim());
+
+            const apiUrl = `http://localhost:5000/search?name=${name}&author=${author}&isbn=${isbn}&subject=${subject}`;
+
+            try {
+                console.log("Fetching books from:", apiUrl); // Debugging
+
+                const response = await fetch(apiUrl, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server responded with status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Display search results
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = '';
+
+                if (!data.length) {
+                    resultsDiv.innerHTML = 'No books found.';
+                    return;
+                }
+
+                data.forEach(book => {
+                    const bookDiv = document.createElement('div');
+                    bookDiv.innerHTML = `
+                        <strong>Title:</strong> ${book.name} <br>
+                        <strong>Author:</strong> ${book.author} <br>
+                        <strong>Publisher:</strong> ${book.publisher} <br>
+                        <strong>Edition:</strong> ${book.edition} <br>
+                        <strong>ISBN:</strong> ${book.isbn} <br>
+                        <strong>Subject:</strong> ${book.subject} <br>
+                        <strong>Availability:</strong> <span id="availability-${book.id}">${book.availability}</span> copies available <br>
+                        <button onclick="reserveBook(${book.id}, ${book.availability})">Reserve</button>
+                        <br><br>
+                    `;
+                    resultsDiv.appendChild(bookDiv);
+                });
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                alert('Error searching for books.');
+            }
+        });
+
+        // Function to reserve a book and update availability
+        async function reserveBook(bookId, currentAvailability) {
+            if (currentAvailability <= 0) {
+                alert('Sorry, no copies are available to reserve.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:4000/reserve/${bookId}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById(`availability-${bookId}`).innerText = currentAvailability - 1;
+                } else {
+                    alert('Error reserving the book.');
+                }
+            } catch (error) {
+                console.error('Error reserving book:', error);
+                alert('Error reserving the book.');
+            }
+        }
+    </script>
+</body>
+</html>

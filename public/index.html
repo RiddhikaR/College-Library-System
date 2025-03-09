@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Institute Website</title>
+    <link rel="stylesheet" href="index.css">
+    <style>
+        /* Initially hide all sections except home */
+        .page-content {
+            display: none;
+        }
+
+        /* When visible class is added, display section */
+        .page-content.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with logo -->
+    <header>
+        <div class="logo">
+            <img src="logo.png" alt="Institute Logo" />
+        </div>
+        <div class="institute-name">VIT (Chennai Campus)</div>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <ul>
+            <li><a href="#" id="home">Home</a></li>
+            <li><a href="#" id="about-us">About Us</a></li>
+            <li><a href="#" id="achievements">Achievements</a></li>
+            <li><a href="#" id="events">Events</a></li>
+            <li><a href="#" id="contact-us">Contact Us</a></li>
+            <li><a href="page1.html">Login</a></li>
+        </ul>
+    </nav>
+
+    <!-- Image Slider (Placed Above Content) -->
+    <div class="image-slider">
+        <img src="img2.jpg" id="slider-img" alt="Slider Image">
+    </div>
+
+    <!-- Main Content Area -->
+    <main id="content">
+        <!-- Home Section (Initially Visible) -->
+        <section id="home-section" class="page-content visible">
+            <h2>Welcome to the Institute</h2>
+            <p>Explore our institute and its remarkable journey of achievements, events, and more.</p>
+        </section>
+
+        <!-- About Us Section -->
+        <section id="about-us-section" class="page-content">
+            <h2>About Us</h2>
+            <p>The Central library has been established with state-of-art infrastructure to the International Standards, spreads over to four floors with built-in area of 2322.58 sq.m. It has provided with centrally air-conditioning system, well-protected with fire alarm, CCTV, and Flap Barrier. Reference and Textbooks of national and international authors, International and National Journals & Non-Book materials are available to cater various fields of Basic Sciences, Engineering and Technology, Law, Fashion Technology, Humanities and Social Sciences. VIT Chennai Library has a Digital library, Video Conferencing facility. Central Library is using Koha software for Library automation and has implemented RFID technology with self-issue and return kiosk, WEB-OPAC (Online Public Access Catalogue), and online renewal facility.</p>
+        </section>
+
+        <!-- Achievements Section -->
+        <section id="achievements-section" class="page-content">
+            <h2>Achievements</h2>
+            <p>State-of-the-art Infrastructure
+                VIT Chennai Library boasts a modern, spacious building with state-of-the-art facilities to cater to the academic needs of over 20,000 students. The library has a wide collection of books, journals, and e-resources, accessible to all students and faculty.
+                
+                Digitization of Resources
+                The library has successfully digitized over 100,000 resources, making it easier for students and researchers to access important study materials and research papers from anywhere on campus and remotely.
+                
+                Collaborations with Global Libraries
+                The library has established collaborations with leading libraries worldwide, including JSTOR, Springer, Elsevier, and Wiley, providing access to a wealth of research materials and databases.
+                
+                24/7 Access to Online Resources
+                With the introduction of the library's online portal, students can access study resources, journals, e-books, and research papers round-the-clock, ensuring uninterrupted academic support.
+                
+                Organizing National and International Conferences
+                The library has hosted multiple national and international conferences and workshops on topics such as "Digital Libraries," "Knowledge Management," and "Open Access Resources," contributing to the global academic community.
+                
+                Inclusion of Specialized Collections
+                The library’s collection includes specialized resources in engineering, technology, sciences, humanities, and management, alongside an increasing collection of materials for competitive exams, enhancing its value to both undergraduate and postgraduate students.
+                
+                Green Library Initiatives
+                In line with VIT’s commitment to sustainability, the library has adopted several eco-friendly practices, including digitalization of records to minimize paper usage, green building designs, and eco-conscious energy-saving measures.
+                
+                Library Awareness Programs
+                The library organizes regular orientation programs for new students, workshops on how to effectively use library resources, and training on research tools and academic writing.
+                
+                VIT Chennai Library Awards
+                The library has received numerous accolades for its innovation, digital transformation, and contribution to student development, including awards from various educational bodies.
+                
+                Highly Rated by Students
+                The VIT Chennai Library has consistently been rated as one of the best university libraries in India by students, praised for its vast resources, user-friendly atmosphere, and excellent services.
+            </p>
+        </section>
+
+        <!-- Events Section -->
+        <section id="events-section" class="page-content">
+            <h2>Upcoming Events</h2>
+            <p>TechFest 2025 - March 25, 2025</p>
+            <p>Annual Sports Day - April 10, 2025</p>
+            <p>International Conference on Sustainable Development - May 15-16, 2025</p>
+            <p>Cultural Fest 2025 - June 5, 2025</p>
+            <p>Alumni Meet 2025 - July 20, 2025</p>
+        </section>
+
+        <!-- Contact Us Section -->
+        <section id="contact-us-section" class="page-content">
+            <h2>Contact Us</h2>
+            <p>If you have any questions or need more information, feel free to reach out to us.</p>
+            <p>Phone: +91 123 456 7890</p>
+            <p>Email: contact@vit.edu</p>
+            <p>Address: VIT University, Vandalur, Chennai, Tamil Nadu, India</p>
+            <p>Office Hours: Monday to Friday, 9:00 AM - 6:00 PM</p>
+        </section>
+    </main>
+
+    <script>
+        // JavaScript for dynamic content display
+        document.getElementById('home').addEventListener('click', function() {
+            showSection('home-section');
+        });
+
+        document.getElementById('about-us').addEventListener('click', function() {
+            showSection('about-us-section');
+        });
+
+        document.getElementById('achievements').addEventListener('click', function() {
+            showSection('achievements-section');
+        });
+
+        document.getElementById('events').addEventListener('click', function() {
+            showSection('events-section');
+        });
+
+        document.getElementById('contact-us').addEventListener('click', function() {
+            showSection('contact-us-section');
+        });
+
+        // Function to show the correct section and hide others
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.page-content');
+            sections.forEach(section => {
+                section.classList.remove('visible');
+            });
+
+            // Show the selected section
+            const activeSection = document.getElementById(sectionId);
+            activeSection.classList.add('visible');
+        }
+    </script>
+</body>
+</html>
